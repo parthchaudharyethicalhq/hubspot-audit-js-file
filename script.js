@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('email-form');
+    const form = document.getElementById('wf-form-HubSpot-Audit');
     const recommendationContainer = document.getElementById('audit-recommendations');
   
     // Toggle visibility of "Other" fields
