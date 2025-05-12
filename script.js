@@ -11,35 +11,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // On Initial Submit
     initialSubmit.addEventListener('click', async function (e) {
-        e.preventDefault();
+      e.preventDefault();
 
-        hsaUserInfo = {
-            //firstName: document.getElementById('first-name').value,
-            //lastName: document.getElementById('last-name').value,
-            companyUrl: document.getElementById('company-url').value,
-            email: document.getElementById('email-address').value
-        };
+      hsaUserInfo = {
+        //firstName: document.getElementById('first-name').value,
+        //lastName: document.getElementById('last-name').value,
+        companyUrl: document.getElementById('company-url').value,
+        email: document.getElementById('email-address').value
+      };
 
-        hsaInitialUserAnswers = {
-            marketingHub: document.querySelector('input[name="Marketing-Hub"]:checked')?.value || '',
-            salesHub: document.querySelector('input[name="Sales-Hub"]:checked')?.value || '',
-            serviceHub: document.querySelector('input[name="Service-Hub"]:checked')?.value || '',
-            cmsHub: document.querySelector('input[name="CMS-Hub"]:checked')?.value || '',
-            opsHub: document.querySelector('input[name="Operations-Hub"]:checked')?.value || '',
-            goals: Array.from(document.getElementById('goal').selectedOptions).map(opt => opt.value),
-            goalsOther: document.getElementById('goal-others').value,
-            improvements: Array.from(document.getElementById('improvement').selectedOptions).map(opt => opt.value),
-            workflowCount: document.querySelector('input[name="workflows"]:checked')?.value || '',
-            segmentation: Array.from(document.getElementById('Segmentation').selectedOptions).map(opt => opt.value),
-            segmentationOther: document.getElementById('segmentation-other').value,
-            underusedFeatures: Array.from(document.getElementById('features').selectedOptions).map(opt => opt.value),
-            dataQuality: Array.from(document.getElementById('data-quality').selectedOptions).map(opt => opt.value),
-            integrations: Array.from(document.getElementById('integrations').selectedOptions).map(opt => opt.value),
-            integrationsOther: document.getElementById('integrations-other').value,
-            mainChallenge: document.getElementById('challenge').value
-        };
+      hsaInitialUserAnswers = {
+        marketingHub: document.querySelector('input[name="Marketing-Hub"]:checked')?.value || '',
+        salesHub: document.querySelector('input[name="Sales-Hub"]:checked')?.value || '',
+        serviceHub: document.querySelector('input[name="Service-Hub"]:checked')?.value || '',
+        cmsHub: document.querySelector('input[name="CMS-Hub"]:checked')?.value || '',
+        opsHub: document.querySelector('input[name="Operations-Hub"]:checked')?.value || '',
+        goals: Array.from(document.getElementById('goal').selectedOptions).map(opt => opt.value),
+        goalsOther: document.getElementById('goal-others').value,
+        improvements: Array.from(document.getElementById('improvement').selectedOptions).map(opt => opt.value),
+        workflowCount: document.querySelector('input[name="workflows"]:checked')?.value || '',
+        segmentation: Array.from(document.getElementById('Segmentation').selectedOptions).map(opt => opt.value),
+        segmentationOther: document.getElementById('segmentation-other').value,
+        underusedFeatures: Array.from(document.getElementById('features').selectedOptions).map(opt => opt.value),
+        dataQuality: Array.from(document.getElementById('data-quality').selectedOptions).map(opt => opt.value),
+        integrations: Array.from(document.getElementById('integrations').selectedOptions).map(opt => opt.value),
+        integrationsOther: document.getElementById('integrations-other').value,
+        mainChallenge: document.getElementById('challenge').value
+      };
 
-        mainPrompt = `
+      mainPrompt = `
             You are an expert HubSpot consultant with extensive experience in optimizing HubSpot implementations. You're analyzing information from a user who has filled out an initial form about their HubSpot usage.
 
             Based on their responses, your task is to:
@@ -94,24 +94,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 <li id="followup-q1">
                     <span>[Question 1]</span>
                     <textarea placeholder="Type your replay here..."></textarea>
-                </li>
+  </li>
                 <li id="followup-q2">
                     <span>[Question 2]</span>
                     <textarea placeholder="Type your replay here..."></textarea>
-                </li>
+  </li>
                 <li id="followup-q3">
                     <span>[Question 3]</span>
                     <textarea placeholder="Type your replay here..."></textarea>
-                </li>
+  </li>
                 <li id="followup-q4">
                     <span>[Question 4 - if needed]</span>
                     <textarea placeholder="Type your replay here..."></textarea>
-                </li>
+  </li>
                 <li id="followup-q5">
                     <span>[Question 5 - if needed]</span>
                     <textarea placeholder="Type your replay here..."></textarea>
-                </li>
-            </ul>
+  </li>
+  </ul>
 
             Your answers will help me provide specific, actionable recommendations to improve your HubSpot implementation."
 
@@ -125,66 +125,66 @@ document.addEventListener('DOMContentLoaded', function () {
             - Provide response in HTML format.
         `;
 
-        try {
-            const response = await fetch("https://hook.eu2.make.com/yopro1oexx44tfxgj0w7x8zdov6y6t6p", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    step: "initial",
-                    prompt: mainPrompt,
-                    userInfo: hsaUserInfo,
-                    userAnswers: hsaInitialUserAnswers,
-                    followUpInfo: followUpQnA
-                })
-            });
+      try {
+        const response = await fetch("https://hook.eu2.make.com/yopro1oexx44tfxgj0w7x8zdov6y6t6p", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            step: "initial",
+            prompt: mainPrompt,
+            userInfo: hsaUserInfo,
+            userAnswers: hsaInitialUserAnswers,
+            followUpInfo: followUpQnA
+          })
+        });
 
-            if (!response.ok) throw new Error('Failed to get a response from Make.com webhook');
+        if (!response.ok) throw new Error('Failed to get a response from Make.com webhook');
 
-            const html = await response.text();
+        const html = await response.text();
 
-            followUpQuestionContainer.innerHTML = html;
+        followUpQuestionContainer.innerHTML = html;
 
-            // Hide loading div - Show followup screen
-            $('.hsa-placeholder-loader').addClass('d-none');
-            $('.hsa-follow-up').removeClass('d-none');
+        // Hide loading div - Show followup screen
+        $('.hsa-placeholder-loader').addClass('d-none');
+        $('.hsa-follow-up').removeClass('d-none');
 
-        } catch (error) {
-            console.error('Error:', error);
-            recommendationContainer.innerHTML = `<h2>Error:</h2><p>${error.message}</p>`;
-        }
+      } catch (error) {
+        console.error('Error:', error);
+        recommendationContainer.innerHTML = `<h2>Error:</h2><p>${error.message}</p>`;
+      }
     });
 
     // On Final Submit
     fianlSubmit.addEventListener('click', async function (e) {
-        e.preventDefault();
+      e.preventDefault();
 
-        const questionItems = document.querySelectorAll('#followup-list li');
+      const questionItems = document.querySelectorAll('#followup-list li');
 
-        questionItems.forEach((item, index) => {
-            const questionText = item.querySelector('span')?.textContent?.trim() || 'No Answer';
-            const answerText = item.querySelector('textarea')?.value?.trim() || 'No Answer';
+      questionItems.forEach((item, index) => {
+        const questionText = item.querySelector('span')?.textContent?.trim() || 'No Answer';
+        const answerText = item.querySelector('textarea')?.value?.trim() || 'No Answer';
 
-            followUpQnA[index + 1] = {
-                que: questionText,
-                ans: answerText
-            };
-        });
+        followUpQnA[index + 1] = {
+          que: questionText,
+          ans: answerText
+        };
+      });
 
-        // hide all Steps show final answer step
-        $('[class^="hsa-step-"]').addClass('d-none');
-        $('.hsa-step-12, .hsa-placeholder-loader').removeClass('d-none');
+      // hide all Steps show final answer step
+      $('[class^="hsa-step-"]').addClass('d-none');
+      $('.hsa-step-12, .hsa-placeholder-loader').removeClass('d-none');
 
-        // Scroll to Top
-        const $section = $('.hsa-section');
-        if ($section.length) {
-            $('html, body').animate({
-                scrollTop: $section.offset().top - 60
-            }, 800);
-        }
+      // Scroll to Top
+      const $section = $('.hsa-section');
+      if ($section.length) {
+        $('html, body').animate({
+          scrollTop: $section.offset().top - 60
+        }, 800);
+      }
 
-        finalPrompt = `
+      finalPrompt = `
             You are an expert HubSpot consultant specializing in optimization and implementation. You've received comprehensive information about a user's HubSpot setup, including their initial responses and answers to follow-up questions.
 
             Your task is to:
@@ -234,11 +234,11 @@ document.addEventListener('DOMContentLoaded', function () {
             Follow-up Questions and Answers:
             -------------
             ${
-                Object.entries(followUpQnA).map(([key, value], i) => `
+      Object.entries(followUpQnA).map(([key, value], i) => `
                     Question ${i + 1}: ${value.que}
                     Answer ${i + 1}: ${value.ans}
                 `).join('')
-            }
+    }
 
             Format your response using the following structure:
 
@@ -274,37 +274,37 @@ document.addEventListener('DOMContentLoaded', function () {
 
             Pleaze send response in HTML format.
         `;
-        
 
-        try {
-            const response = await fetch("https://hook.eu2.make.com/yopro1oexx44tfxgj0w7x8zdov6y6t6p", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    step: "followup",
-                    prompt: finalPrompt,
-                    userInfo: hsaUserInfo,
-                    userAnswers: hsaInitialUserAnswers,
-                    followUpInfo: followUpQnA
-                })
-            });
 
-            if (!response.ok) throw new Error('Failed to get a response from Make.com webhook');
+      try {
+        const response = await fetch("https://hook.eu2.make.com/yopro1oexx44tfxgj0w7x8zdov6y6t6p", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            step: "followup",
+            prompt: finalPrompt,
+            userInfo: hsaUserInfo,
+            userAnswers: hsaInitialUserAnswers,
+            followUpInfo: followUpQnA
+          })
+        });
 
-            const html = await response.text();
+        if (!response.ok) throw new Error('Failed to get a response from Make.com webhook');
 
-            recommendationContainer.innerHTML = html;
+        const html = await response.text();
 
-            // Hide loading div - Show followup screen
-            $('.hsa-placeholder-loader').addClass('d-none');
-            $('.hsa-recommendation').removeClass('d-none');
+        recommendationContainer.innerHTML = html;
 
-        } catch (error) {
-            console.error('Error:', error);
-            recommendationContainer.innerHTML = `<h2>Error:</h2><p>${error.message}</p>`;
-        }
+        // Hide loading div - Show followup screen
+        $('.hsa-placeholder-loader').addClass('d-none');
+        $('.hsa-recommendation').removeClass('d-none');
+
+      } catch (error) {
+        console.error('Error:', error);
+        recommendationContainer.innerHTML = `<h2>Error:</h2><p>${error.message}</p>`;
+      }
 
     });
 
@@ -312,28 +312,28 @@ document.addEventListener('DOMContentLoaded', function () {
     Handle Step navigation logic
     ---------------------- */
     function handleStepsNavigation() {
-        const $steps = $('[class^="hsa-step-"]');
-        const $modal = $('.hsa-modal-wrap');
+      const $steps = $('[class^="hsa-step-"]');
+      const $modal = $('.hsa-modal-wrap');
 
-        $steps.not('.hsa-step-1').addClass('d-none');
+      $steps.not('.hsa-step-1').addClass('d-none');
 
-        $('[step-go-to]').on('click', async function () {
-            const $btn = $(this);
-            const targetStep = $(this).attr('step-go-to');
+      $('[step-go-to]').on('click', async function () {
+        const $btn = $(this);
+        const targetStep = $(this).attr('step-go-to');
 
-            // Disable button immediately
-            $btn.addClass('disabled').attr('disabled', true);
+        // Disable button immediately
+        $btn.addClass('disabled').attr('disabled', true);
 
-            if (targetStep === '2') {
-                //const firstName = $('#first-name').val().trim();
-                //const lastName = $('#last-name').val().trim();
-                const companyUrl = $('#company-url').val().trim();
-                const email = $('#email-address').val().trim();
+        if (targetStep === '2') {
+          //const firstName = $('#first-name').val().trim();
+          //const lastName = $('#last-name').val().trim();
+          const companyUrl = $('#company-url').val().trim();
+          const email = $('#email-address').val().trim();
 
-                let hasError = false;
-                $('.form-error').remove(); // Clear any existing errors
+          let hasError = false;
+          $('.form-error').remove(); // Clear any existing errors
 
-                /*-------------------
+          /*-------------------
                     // First Name check
                     if (!firstName) {
                         $('#first-name').after('<div class="form-error">First name is required.</div>');
@@ -347,111 +347,99 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 ------------------ */
 
-                // URL check (basic pattern)
-                const urlPattern = /^(www\.)?[a-z0-9-]+(\.[a-z]{2,})+$/i;
-                if (!urlPattern.test(companyUrl)) {
-                    $('#company-url').after('<div class="form-error">Enter a valid company URL like www.example.com</div>');
-                    hasError = true;
-                }
+          // URL check (basic pattern)
+          const urlPattern = /^(www\.)?[a-z0-9-]+(\.[a-z]{2,})+$/i;
+          if (!urlPattern.test(companyUrl)) {
+            $('#company-url').after('<div class="form-error">Please use a valid URL like example.com</div>');
+            hasError = true;
+          }
 
-                // Email format check
-                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailPattern.test(email)) {
-                    $('#email-address').after('<div class="form-error">Invalid email format.</div>');
-                    hasError = true;
-                }
+          // Email format check
+          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailPattern.test(email)) {
+            $('#email-address').after('<div class="form-error">Invalid email format.</div>');
+            hasError = true;
+          }
 
-                if (hasError) {
-                    $btn.removeClass('disabled').removeAttr('disabled'); // Re-enable on error
-                    return;
-                }
+          if (hasError) {
+            $btn.removeClass('disabled').removeAttr('disabled'); // Re-enable on error
+            return;
+          }
 
-                // ✅ Emailable API verification
-                try {
-                    const res = await fetch(`https://api.emailable.com/v1/verify?email=${encodeURIComponent(email)}&api_key=live_098d50d0e1545add1658`);
-                    const data = await res.json();
+          // ✅ Emailable API verification
+          try {
+            const res = await fetch(`https://api.emailable.com/v1/verify?email=${encodeURIComponent(email)}&api_key=live_098d50d0e1545add1658`);
+            const data = await res.json();
 
-                    if (data.state !== 'deliverable') {
-                        $('#email-address').after('<div class="form-error">Email is not deliverable.</div>');
-                        $btn.removeClass('disabled').removeAttr('disabled');
-                        return;
-                    }
-
-                    if (data.free) {
-                        $('#email-address').after('<div class="form-error">Free email addresses (like Gmail, Yahoo) are not allowed. Use your business email.</div>');
-                        $btn.removeClass('disabled').removeAttr('disabled');
-                        return;
-                    }
-
-                    if (data.disposable) {
-                        $('#email-address').after('<div class="form-error">Disposable email addresses are not allowed.</div>');
-                        $btn.removeClass('disabled').removeAttr('disabled');
-                        return;
-                    }
-
-                } catch (err) {
-                    $('#email-address').after('<div class="form-error">Failed to verify email address. Try again later.</div>');
-                    $btn.removeClass('disabled').removeAttr('disabled');
-                    return;
-                }
+            if (data.state !== 'deliverable') {
+              $('#email-address').after('<div class="form-error">Please use a valid business email address.</div>');
+              $btn.removeClass('disabled').removeAttr('disabled');
+              return;
             }
 
-            // ✅ If everything passed
-            if (targetStep === 'Submit') {
-                $modal.removeClass('d-none');
-            } else {
-                $steps.addClass('d-none');
-                $(`.hsa-step-${targetStep}`).removeClass('d-none');
-
-                const $section = $('.hsa-section');
-                if ($section.length) {
-                    $('html, body').animate({
-                        scrollTop: $section.offset().top - 60
-                    }, 800);
-                }
+            if (data.free) {
+              $('#email-address').after('<div class="form-error">Free email addresses (like Gmail, Yahoo) are not allowed. Use your business email.</div>');
+              $btn.removeClass('disabled').removeAttr('disabled');
+              return;
             }
 
-            // Re-enable the button after step change
+            if (data.disposable) {
+              $('#email-address').after('<div class="form-error">Disposable email addresses are not allowed.</div>');
+              $btn.removeClass('disabled').removeAttr('disabled');
+              return;
+            }
+
+          } catch (err) {
+            $('#email-address').after('<div class="form-error">Failed to verify email address. Try again later.</div>');
             $btn.removeClass('disabled').removeAttr('disabled');
-        });
+            return;
+          }
+        }
 
-        // ✅ Modal "Yes"/"No" handling
-        // $('[hsa-final-submit]').on('click', function () {
-        //     const action = $(this).attr('hsa-final-submit');
-        //     if (action === 'Yes') {
-        //         $modal.addClass('d-none');
-        //         $steps.addClass('d-none');
-        //         $('.hsa-step-10').removeClass('d-none');
-        //     } else if (action === 'No') {
-        //         $modal.addClass('d-none');
-        //     }
-        // });
+        // ✅ If everything passed
+        if (targetStep === 'Submit') {
+          $modal.removeClass('d-none');
+        } else {
+          $steps.addClass('d-none');
+          $(`.hsa-step-${targetStep}`).removeClass('d-none');
+
+          const $section = $('.hsa-section');
+          if ($section.length) {
+            $('html, body').animate({
+              scrollTop: $section.offset().top - 60
+            }, 800);
+          }
+        }
+
+        // Re-enable the button after step change
+        $btn.removeClass('disabled').removeAttr('disabled');
+      });
     }
 
     //Handle Modal
     function handleModalConfirmation() {
-        const $modal = $('.hsa-modal-wrap');
-        const $step2 = $('.hsa-step-2');
-        const $step3 = $('.hsa-step-3');
+      const $modal = $('.hsa-modal-wrap');
+      const lastQuestionStep = $('.hsa-step-10');
+      const followUpStep = $('.hsa-step-11');
 
-        // Handle "Yes" click
-        $('[hsa-final-submit="Yes"]').on('click', function () {
-            $modal.addClass('d-none');    // Hide modal
-            $step2.addClass('d-none');    // Hide Step 2
-            $step3.removeClass('d-none'); // Show Step 3
+      // Handle "Yes" click
+      $('[hsa-final-submit="Yes"]').on('click', function () {
+        $modal.addClass('d-none');    // Hide modal
+        lastQuestionStep.addClass('d-none');    // Hide Step 10
+        followUpStep.removeClass('d-none'); // Show Step 11
 
-            //Scroll top to section
-            $('html, body').animate({
-                scrollTop: $('.hsa-section').offset().top - 60
-            }, 800);
-        });
+        //Scroll top to section
+        $('html, body').animate({
+          scrollTop: $('.hsa-section').offset().top - 60
+        }, 800);
+      });
 
-        // Handle "No" click
-        $('[hsa-final-submit="No"]').on('click', function () {
-            $modal.addClass('d-none');    // Just hide modal
-        });
+      // Handle "No" click
+      $('[hsa-final-submit="No"]').on('click', function () {
+        $modal.addClass('d-none');    // Just hide modal
+      });
     }
 
     handleStepsNavigation();
     handleModalConfirmation();
-});
+  });
