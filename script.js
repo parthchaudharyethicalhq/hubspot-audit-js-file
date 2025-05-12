@@ -2,10 +2,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const initialSubmit = document.querySelector('[hsa-final-submit="Yes"]');
     const fianlSubmit = document.querySelector('[hsa-final-submit="final"]');
     const followUpQuestionContainer = document.getElementById('audit-followup');
-    const followUpAnswers = document.getElementById('hsa-followup-ans');
     const recommendationContainer = document.getElementById('audit-recommendations');
     let hsaUserInfo;
     let hsaInitialUserAnswers;
+    let followUpQnA = {};
     let mainPrompt;
     let finalPrompt;
 
@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
 
         hsaUserInfo = {
-            firstName: document.getElementById('first-name').value,
-            lastName: document.getElementById('last-name').value,
+            //firstName: document.getElementById('first-name').value,
+            //lastName: document.getElementById('last-name').value,
             companyUrl: document.getElementById('company-url').value,
             email: document.getElementById('email-address').value
         };
@@ -49,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             Here's the user's information:
 
-            Name: ${hsaUserInfo.firstName} ${hsaUserInfo.lastName}
             Company: ${hsaUserInfo.companyUrl}
             Email: ${hsaUserInfo.email}
 
@@ -86,13 +85,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
             Based on this information, generate 3-5 follow-up questions that will help you provide better, more specific recommendations. Format your response as follows:
 
+            Based on this information, generate 3-5 follow-up questions that will help you provide better, more specific recommendations. 
+            Format your response as follows:
+
             "Based on your HubSpot setup, I'd like to ask a few follow-up questions to provide you with the most relevant recommendations:
 
-            1. [Question 1]
-            2. [Question 2]
-            3. [Question 3]
-            4. [Question 4 - if needed]
-            5. [Question 5 - if needed]
+            <ul id="followup-list">
+                <li id="followup-q1">
+                    <span>[Question 1]</span>
+                    <textarea placeholder="Type your replay here..."></textarea>
+                </li>
+                <li id="followup-q2">
+                    <span>[Question 2]</span>
+                    <textarea placeholder="Type your replay here..."></textarea>
+                </li>
+                <li id="followup-q3">
+                    <span>[Question 3]</span>
+                    <textarea placeholder="Type your replay here..."></textarea>
+                </li>
+                <li id="followup-q4">
+                    <span>[Question 4 - if needed]</span>
+                    <textarea placeholder="Type your replay here..."></textarea>
+                </li>
+                <li id="followup-q5">
+                    <span>[Question 5 - if needed]</span>
+                    <textarea placeholder="Type your replay here..."></textarea>
+                </li>
+            </ul>
 
             Your answers will help me provide specific, actionable recommendations to improve your HubSpot implementation."
 
@@ -102,6 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
             - Adapt questions based on their specific tools, goals, and challenges
             - Ask open-ended questions that can't be answered with yes/no
             - Avoid generic questions that could apply to any HubSpot user
+            - With every question attach one text area input with  for user to answer.
             - Provide response in HTML format.
         `;
 
@@ -115,7 +135,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     step: "initial",
                     prompt: mainPrompt,
                     userInfo: hsaUserInfo,
-                    userAnswers: hsaInitialUserAnswers
+                    userAnswers: hsaInitialUserAnswers,
+                    followUpInfo: followUpQnA
                 })
             });
 
@@ -139,17 +160,29 @@ document.addEventListener('DOMContentLoaded', function () {
     fianlSubmit.addEventListener('click', async function (e) {
         e.preventDefault();
 
-        const value = followUpAnswers.value.trim();
+        const questionItems = document.querySelectorAll('#followup-list li');
 
-        if (!value) {
-            // Show error (e.g., add error class or message)
-            alert('Please fill out the follow-up field before submitting.');
-            return;
-        }
+        questionItems.forEach((item, index) => {
+            const questionText = item.querySelector('span')?.textContent?.trim() || 'No Answer';
+            const answerText = item.querySelector('textarea')?.value?.trim() || 'No Answer';
+
+            followUpQnA[index + 1] = {
+                que: questionText,
+                ans: answerText
+            };
+        });
 
         // hide all Steps show final answer step
         $('[class^="hsa-step-"]').addClass('d-none');
-        $('.hsa-step-4, .hsa-placeholder-loader').removeClass('d-none');
+        $('.hsa-step-12, .hsa-placeholder-loader').removeClass('d-none');
+
+        // Scroll to Top
+        const $section = $('.hsa-section');
+        if ($section.length) {
+            $('html, body').animate({
+                scrollTop: $section.offset().top - 60
+            }, 800);
+        }
 
         finalPrompt = `
             You are an expert HubSpot consultant specializing in optimization and implementation. You've received comprehensive information about a user's HubSpot setup, including their initial responses and answers to follow-up questions.
@@ -164,7 +197,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             Initial Form Information:
             -------------
-            Name: ${hsaUserInfo.firstName} ${hsaUserInfo.lastName}
             Company: ${hsaUserInfo.companyUrl}
             Email: ${hsaUserInfo.email}
 
@@ -201,12 +233,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
             Follow-up Questions and Answers:
             -------------
-            Questions: ${followUpQuestionContainer.innerHTML}
-            Answers: ${followUpAnswers.value}
+            ${
+                Object.entries(followUpQnA).map(([key, value], i) => `
+                    Question ${i + 1}: ${value.que}
+                    Answer ${i + 1}: ${value.ans}
+                `).join('')
+            }
 
             Format your response using the following structure:
 
-            "# HubSpot Audit Results for ${hsaUserInfo.firstName} at ${hsaUserInfo.companyUrl}
+            "# HubSpot Audit Results for ${hsaUserInfo.companyUrl}
 
             ## Current Setup Overview
             [Provide a concise 3-4 sentence summary of their current HubSpot setup, goals, and key challenges based on all information provided]
@@ -227,11 +263,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             [Continue with recommendations 3-10, following the same format]
 
-            ## Next Steps
-            To discuss these recommendations in detail and receive personalized implementation guidance, schedule a free 30-minute consultation with our HubSpot experts.
-
-            [Consultation CTA]
-
             Important guidelines:
             - Each recommendation should be specific, actionable, and tailored to their situation
             - Focus recommendations on their stated goals and challenges
@@ -243,6 +274,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             Pleaze send response in HTML format.
         `;
+        
 
         try {
             const response = await fetch("https://hook.eu2.make.com/yopro1oexx44tfxgj0w7x8zdov6y6t6p", {
@@ -254,7 +286,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     step: "followup",
                     prompt: finalPrompt,
                     userInfo: hsaUserInfo,
-                    userAnswers: hsaInitialUserAnswers
+                    userAnswers: hsaInitialUserAnswers,
+                    followUpInfo: followUpQnA
                 })
             });
 
@@ -285,28 +318,34 @@ document.addEventListener('DOMContentLoaded', function () {
         $steps.not('.hsa-step-1').addClass('d-none');
 
         $('[step-go-to]').on('click', async function () {
+            const $btn = $(this);
             const targetStep = $(this).attr('step-go-to');
 
+            // Disable button immediately
+            $btn.addClass('disabled').attr('disabled', true);
+
             if (targetStep === '2') {
-                const firstName = $('#first-name').val().trim();
-                const lastName = $('#last-name').val().trim();
+                //const firstName = $('#first-name').val().trim();
+                //const lastName = $('#last-name').val().trim();
                 const companyUrl = $('#company-url').val().trim();
                 const email = $('#email-address').val().trim();
 
                 let hasError = false;
                 $('.form-error').remove(); // Clear any existing errors
 
-                // First Name check
-                if (!firstName) {
-                    $('#first-name').after('<div class="form-error">First name is required.</div>');
-                    hasError = true;
-                }
+                /*-------------------
+                    // First Name check
+                    if (!firstName) {
+                        $('#first-name').after('<div class="form-error">First name is required.</div>');
+                        hasError = true;
+                    }
 
-                // Last Name check
-                if (!lastName) {
-                    $('#last-name').after('<div class="form-error">Last name is required.</div>');
-                    hasError = true;
-                }
+                    // Last Name check
+                    if (!lastName) {
+                        $('#last-name').after('<div class="form-error">Last name is required.</div>');
+                        hasError = true;
+                    }
+                ------------------ */
 
                 // URL check (basic pattern)
                 const urlPattern = /^(www\.)?[a-z0-9-]+(\.[a-z]{2,})+$/i;
@@ -322,7 +361,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     hasError = true;
                 }
 
-                if (hasError) return;
+                if (hasError) {
+                    $btn.removeClass('disabled').removeAttr('disabled'); // Re-enable on error
+                    return;
+                }
 
                 // ✅ Emailable API verification
                 try {
@@ -331,21 +373,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     if (data.state !== 'deliverable') {
                         $('#email-address').after('<div class="form-error">Email is not deliverable.</div>');
+                        $btn.removeClass('disabled').removeAttr('disabled');
                         return;
                     }
 
                     if (data.free) {
                         $('#email-address').after('<div class="form-error">Free email addresses (like Gmail, Yahoo) are not allowed. Use your business email.</div>');
+                        $btn.removeClass('disabled').removeAttr('disabled');
                         return;
                     }
 
                     if (data.disposable) {
                         $('#email-address').after('<div class="form-error">Disposable email addresses are not allowed.</div>');
+                        $btn.removeClass('disabled').removeAttr('disabled');
                         return;
                     }
 
                 } catch (err) {
                     $('#email-address').after('<div class="form-error">Failed to verify email address. Try again later.</div>');
+                    $btn.removeClass('disabled').removeAttr('disabled');
                     return;
                 }
             }
@@ -364,19 +410,22 @@ document.addEventListener('DOMContentLoaded', function () {
                     }, 800);
                 }
             }
+
+            // Re-enable the button after step change
+            $btn.removeClass('disabled').removeAttr('disabled');
         });
 
         // ✅ Modal "Yes"/"No" handling
-        $('[hsa-final-submit]').on('click', function () {
-            const action = $(this).attr('hsa-final-submit');
-            if (action === 'Yes') {
-                $modal.addClass('d-none');
-                $steps.addClass('d-none');
-                $('.hsa-step-3').removeClass('d-none');
-            } else if (action === 'No') {
-                $modal.addClass('d-none');
-            }
-        });
+        // $('[hsa-final-submit]').on('click', function () {
+        //     const action = $(this).attr('hsa-final-submit');
+        //     if (action === 'Yes') {
+        //         $modal.addClass('d-none');
+        //         $steps.addClass('d-none');
+        //         $('.hsa-step-10').removeClass('d-none');
+        //     } else if (action === 'No') {
+        //         $modal.addClass('d-none');
+        //     }
+        // });
     }
 
     //Handle Modal
