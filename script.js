@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
         - Do not mention the actual ICE scores in your response
         - Recommendations should demonstrate expertise and provide value even if they don't become a client
 
-        Pleaze send response in HTML format.
+        Pleasse send response in HTML format, if replay includes any list/bullet point please structure in UL and LI format.
     `;
 
 
@@ -358,7 +358,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Email format check
                 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const plusInLocalPart = /^[^+@]+@[^\s@]+\.[^\s@]+$/;
+
                 if (!emailPattern.test(email)) {
+                    $('#email-address').after('<div class="form-error">Invalid email format.</div>');
+                    hasError = true;
+                } else if (!plusInLocalPart.test(email)) {
                     $('#email-address').after('<div class="form-error">Invalid email format.</div>');
                     hasError = true;
                 }
