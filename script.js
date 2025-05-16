@@ -41,90 +41,90 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         mainPrompt = `
-        You are an expert HubSpot consultant with extensive experience in optimizing HubSpot implementations. You're analyzing information from a user who has filled out an initial form about their HubSpot usage.
+    You are an expert HubSpot consultant with extensive experience in optimizing HubSpot implementations. You're analyzing information from a user who has filled out an initial form about their HubSpot usage.
 
-        Based on their responses, your task is to:
-        1. Identify gaps or areas that need more information
-        2. Generate 3-5 personalized, highly relevant follow-up questions
-        3. Ensure the questions are specific to their situation and will help you provide better recommendations
+    Based on their responses, your task is to:
+    1. Identify gaps or areas that need more information
+    2. Generate 3-5 personalized, highly relevant follow-up questions
+    3. Ensure the questions are specific to their situation and will help you provide better recommendations
 
-        Here's the user's information:
+    Here's the user's information:
 
-        Company: ${hsaUserInfo.companyUrl}
-        Email: ${hsaUserInfo.email}
+    Company: ${hsaUserInfo.companyUrl}
+    Email: ${hsaUserInfo.email}
 
-        HubSpot Tools in Use:
-        - Marketing Hub: ${hsaInitialUserAnswers.marketingHub}
-        - Sales Hub: ${hsaInitialUserAnswers.salesHub}
-        - Service Hub: ${hsaInitialUserAnswers.serviceHub}
-        - CMS Hub: ${hsaInitialUserAnswers.cmsHub}
-        - Operations Hub: ${hsaInitialUserAnswers.opsHub}
+    HubSpot Tools in Use:
+    - Marketing Hub: ${hsaInitialUserAnswers.marketingHub}
+    - Sales Hub: ${hsaInitialUserAnswers.salesHub}
+    - Service Hub: ${hsaInitialUserAnswers.serviceHub}
+    - CMS Hub: ${hsaInitialUserAnswers.cmsHub}
+    - Operations Hub: ${hsaInitialUserAnswers.opsHub}
 
-        Primary Goals with HubSpot:
-        ${hsaInitialUserAnswers.goals.join(', ')} ${hsaInitialUserAnswers.goalsOther ? `(Other: ${hsaInitialUserAnswers.goalsOther})` : ''}
+    Primary Goals with HubSpot:
+    ${hsaInitialUserAnswers.goals.join(', ')} ${hsaInitialUserAnswers.goalsOther ? `(Other: ${hsaInitialUserAnswers.goalsOther})` : ''}
 
-        Areas Looking to Improve:
-        ${hsaInitialUserAnswers.improvements.join(', ')}
+    Areas Looking to Improve:
+    ${hsaInitialUserAnswers.improvements.join(', ')}
 
-        Number of Active Workflows:
-        ${hsaInitialUserAnswers.workflowCount}
+    Number of Active Workflows:
+    ${hsaInitialUserAnswers.workflowCount}
 
-        Contact Segmentation Methods:
-        ${hsaInitialUserAnswers.segmentation.join(', ')} ${hsaInitialUserAnswers.segmentationOther ? `(Other: ${hsaInitialUserAnswers.segmentationOther})` : ''}
+    Contact Segmentation Methods:
+    ${hsaInitialUserAnswers.segmentation.join(', ')} ${hsaInitialUserAnswers.segmentationOther ? `(Other: ${hsaInitialUserAnswers.segmentationOther})` : ''}
 
-        Underutilized HubSpot Features:
-        ${hsaInitialUserAnswers.underusedFeatures.join(', ')}
+    Underutilized HubSpot Features:
+    ${hsaInitialUserAnswers.underusedFeatures.join(', ')}
 
-        Contact Data Quality:
-        ${hsaInitialUserAnswers.dataQuality.join(', ')}
+    Contact Data Quality:
+    ${hsaInitialUserAnswers.dataQuality.join(', ')}
 
-        Third-party Integrations:
-        ${hsaInitialUserAnswers.integrations.join(', ')} ${hsaInitialUserAnswers.integrationsOther ? `(Other: ${hsaInitialUserAnswers.integrationsOther})` : ''}
+    Third-party Integrations:
+    ${hsaInitialUserAnswers.integrations.join(', ')} ${hsaInitialUserAnswers.integrationsOther ? `(Other: ${hsaInitialUserAnswers.integrationsOther})` : ''}
 
-        Biggest Challenge:
-        ${hsaInitialUserAnswers.mainChallenge}
+    Biggest Challenge:
+    ${hsaInitialUserAnswers.mainChallenge}
 
-        Based on this information, generate 3-5 follow-up questions that will help you provide better, more specific recommendations. Format your response as follows:
+    Based on this information, generate 3-5 follow-up questions that will help you provide better, more specific recommendations. Format your response as follows:
 
-        Based on this information, generate 3-5 follow-up questions that will help you provide better, more specific recommendations. 
-        Format your response as follows:
+    Based on this information, generate 3-5 follow-up questions that will help you provide better, more specific recommendations. 
+    Format your response as follows:
 
-        "Based on your HubSpot setup, I'd like to ask a few follow-up questions to provide you with the most relevant recommendations:
+    "Based on your HubSpot setup, I'd like to ask a few follow-up questions to provide you with the most relevant recommendations:
 
-        <ul id="followup-list">
-            <li id="followup-q1">
-                <span>[Question 1]</span>
-                <textarea placeholder="The more detail, the better the audit results…"></textarea>
+    <ul id="followup-list">
+        <li id="followup-q1">
+            <span>[Question 1]</span>
+            <textarea placeholder="The more detail, the better the audit results…"></textarea>
 </li>
-            <li id="followup-q2">
-                <span>[Question 2]</span>
-                <textarea placeholder="The more detail, the better the audit results…"></textarea>
+        <li id="followup-q2">
+            <span>[Question 2]</span>
+            <textarea placeholder="The more detail, the better the audit results…"></textarea>
 </li>
-            <li id="followup-q3">
-                <span>[Question 3]</span>
-                <textarea placeholder="The more detail, the better the audit results…"></textarea>
+        <li id="followup-q3">
+            <span>[Question 3]</span>
+            <textarea placeholder="The more detail, the better the audit results…"></textarea>
 </li>
-            <li id="followup-q4">
-                <span>[Question 4 - if needed]</span>
-                <textarea placeholder="The more detail, the better the audit results…"></textarea>
+        <li id="followup-q4">
+            <span>[Question 4 - if needed]</span>
+            <textarea placeholder="The more detail, the better the audit results…"></textarea>
 </li>
-            <li id="followup-q5">
-                <span>[Question 5 - if needed]</span>
-                <textarea placeholder="The more detail, the better the audit results…"></textarea>
+        <li id="followup-q5">
+            <span>[Question 5 - if needed]</span>
+            <textarea placeholder="The more detail, the better the audit results…"></textarea>
 </li>
 </ul>
 
 "
 
-        Important guidelines:
-        - Questions should be specific and directly related to the information provided
-        - Focus on areas where more detail would help provide better recommendations
-        - Adapt questions based on their specific tools, goals, and challenges
-        - Ask open-ended questions that can't be answered with yes/no
-        - Avoid generic questions that could apply to any HubSpot user
-        - With every question attach one text area input with  for user to answer.
-        - Provide response in HTML format.
-    `;
+    Important guidelines:
+    - Questions should be specific and directly related to the information provided
+    - Focus on areas where more detail would help provide better recommendations
+    - Adapt questions based on their specific tools, goals, and challenges
+    - Ask open-ended questions that can't be answered with yes/no
+    - Avoid generic questions that could apply to any HubSpot user
+    - With every question attach one text area input with  for user to answer.
+    - Provide response in HTML format.
+`;
 
         try {
             const response = await fetch("https://hook.eu2.make.com/yopro1oexx44tfxgj0w7x8zdov6y6t6p", {
@@ -186,94 +186,101 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         finalPrompt = `
-        You are an expert HubSpot consultant specializing in optimization and implementation. You've received comprehensive information about a user's HubSpot setup, including their initial responses and answers to follow-up questions.
+    You are an expert HubSpot consultant specializing in optimization and implementation. You've received comprehensive information about a user's HubSpot setup, including their initial responses and answers to follow-up questions.
 
-        Your task is to:
-        1. Analyze all information to identify optimization opportunities
-        2. Generate 7-10 specific, actionable recommendations
-        3. Prioritize these recommendations using an Impact-Confidence-Ease analysis
-        4. Present them in order from highest to lowest priority
+    Your task is to:
+    1. Analyze all information to identify optimization opportunities
+    2. Generate 7-10 specific, actionable recommendations
+    3. Prioritize these recommendations using an Impact-Confidence-Ease analysis
+    4. Present them in order from highest to lowest priority
 
-        Here's the user's complete information:
+    Here's the user's complete information:
 
-        Initial Form Information:
-        -------------
-        Company: ${hsaUserInfo.companyUrl}
-        Email: ${hsaUserInfo.email}
+    Initial Form Information:
+    -------------
+    Company: ${hsaUserInfo.companyUrl}
+    Email: ${hsaUserInfo.email}
 
-        HubSpot Tools in Use:
-        - Marketing Hub: ${hsaInitialUserAnswers.marketingHub}
-        - Sales Hub: ${hsaInitialUserAnswers.salesHub}
-        - Service Hub: ${hsaInitialUserAnswers.serviceHub}
-        - CMS Hub: ${hsaInitialUserAnswers.cmsHub}
-        - Operations Hub: ${hsaInitialUserAnswers.opsHub}
+    HubSpot Tools in Use:
+    - Marketing Hub: ${hsaInitialUserAnswers.marketingHub}
+    - Sales Hub: ${hsaInitialUserAnswers.salesHub}
+    - Service Hub: ${hsaInitialUserAnswers.serviceHub}
+    - CMS Hub: ${hsaInitialUserAnswers.cmsHub}
+    - Operations Hub: ${hsaInitialUserAnswers.opsHub}
 
-        Primary Goals with HubSpot:
-        ${hsaInitialUserAnswers.goals.join(', ')} ${hsaInitialUserAnswers.goalsOther ? `(Other: ${hsaInitialUserAnswers.goalsOther})` : ''}
+    Primary Goals with HubSpot:
+    ${hsaInitialUserAnswers.goals.join(', ')} ${hsaInitialUserAnswers.goalsOther ? `(Other: ${hsaInitialUserAnswers.goalsOther})` : ''}
 
-        Areas Looking to Improve:
-        ${hsaInitialUserAnswers.improvements.join(', ')}
+    Areas Looking to Improve:
+    ${hsaInitialUserAnswers.improvements.join(', ')}
 
-        Number of Active Workflows:
-        ${hsaInitialUserAnswers.workflowCount}
+    Number of Active Workflows:
+    ${hsaInitialUserAnswers.workflowCount}
 
-        Contact Segmentation Methods:
-        ${hsaInitialUserAnswers.segmentation.join(', ')} ${hsaInitialUserAnswers.segmentationOther ? `(Other: ${hsaInitialUserAnswers.segmentationOther})` : ''}
+    Contact Segmentation Methods:
+    ${hsaInitialUserAnswers.segmentation.join(', ')} ${hsaInitialUserAnswers.segmentationOther ? `(Other: ${hsaInitialUserAnswers.segmentationOther})` : ''}
 
-        Underutilized HubSpot Features:
-        ${hsaInitialUserAnswers.underusedFeatures.join(', ')}
+    Underutilized HubSpot Features:
+    ${hsaInitialUserAnswers.underusedFeatures.join(', ')}
 
-        Contact Data Quality:
-        ${hsaInitialUserAnswers.dataQuality.join(', ')}
+    Contact Data Quality:
+    ${hsaInitialUserAnswers.dataQuality.join(', ')}
 
-        Third-party Integrations:
-        ${hsaInitialUserAnswers.integrations.join(', ')} ${hsaInitialUserAnswers.integrationsOther ? `(Other: ${hsaInitialUserAnswers.integrationsOther})` : ''}
+    Third-party Integrations:
+    ${hsaInitialUserAnswers.integrations.join(', ')} ${hsaInitialUserAnswers.integrationsOther ? `(Other: ${hsaInitialUserAnswers.integrationsOther})` : ''}
 
-        Biggest Challenge:
-        ${hsaInitialUserAnswers.mainChallenge}
+    Biggest Challenge:
+    ${hsaInitialUserAnswers.mainChallenge}
 
-        Follow-up Questions and Answers:
-        -------------
-        ${Object.entries(followUpQnA).map(([key, value], i) => `
-                Question ${i + 1}: ${value.que}
-                Answer ${i + 1}: ${value.ans}
-            `).join('')
+    Follow-up Questions and Answers:
+    -------------
+    ${Object.entries(followUpQnA).map(([key, value], i) =>
+            `
+            Question ${i + 1}: ${value.que}
+            Answer ${i + 1}: ${value.ans}
+        `).join('')
             }
 
-        Format your response using the following structure:
+    Format your response using the following structure:
 
-        "# HubSpot Audit Results for ${hsaUserInfo.companyUrl}
+    <h1>HubSpot Audit Results for ${hsaUserInfo.companyUrl}</h1>
 
-        ## Current Setup Overview
-        [Provide a concise 3-4 sentence summary of their current HubSpot setup, goals, and key challenges based on all information provided]
+    <h2>Current Setup Overview</h2>
+    <p>[Provide a concise 3-4 sentence summary of their current HubSpot setup, goals, and key challenges]</p>
 
-        ## Recommended Optimizations
+    <h2>Recommended Optimizations</h2>
 
-        Based on your HubSpot configuration and goals, here are my prioritized recommendations:
+    <p>Based on your HubSpot configuration and goals, here are my prioritized recommendations:</p>
 
-        ### 1. [First Recommendation - Highest Priority]
-        **What**: [Clear description of what should be implemented or changed]
-        **Why**: [Explanation of benefits and how it addresses their challenges]
-        **How**: [Brief implementation guidance with 2-3 specific steps]
+    <h3 class="recommendation-title">1. [First Recommendation - Highest Priority]</h3>
+    <p class="recommendation-what"><strong>What</strong>: [Clear description of what should be implemented or changed]</p>
+    <p class="recommendation-why"><strong>Why</strong>: [Explanation of benefits and how it addresses their challenges]</p>
+    <p class="recommendation-why"><strong>How</strong>:</p>
+    <ul class="recommendation-how-list">
+            <li>[Brief implementation guidance with 2-3 specific steps]</li>
+</ul>
 
-        ### 2. [Second Recommendation]
-        **What**: [Clear description of what should be implemented or changed]
-        **Why**: [Explanation of benefits and how it addresses their challenges]
-        **How**: [Brief implementation guidance with 2-3 specific steps]
+    <h3 class="recommendation-title">2. [Second Recommendation]</h3>
+    <p class="recommendation-what"><strong>What</strong>: [Clear description of what should be implemented or changed]</p>
+    <p class="recommendation-why"><strong>Why</strong>: [Explanation of benefits and how it addresses their challenges]</p>
+    <p class="recommendation-how"><strong>How</strong>:</p>
+    <ul class="recommendation-how-list">
+            <li>[Brief implementation guidance with 2-3 specific steps]</li>
+</ul>
 
-        [Continue with recommendations 3-10, following the same format]
+    [Continue with recommendations 3-10, following the same format]
 
-        Important guidelines:
-        - Each recommendation should be specific, actionable, and tailored to their situation
-        - Focus recommendations on their stated goals and challenges
-        - Include a mix of quick wins and strategic improvements
-        - For the Impact-Confidence-Ease analysis, prioritize recommendations that would have high impact, high confidence in success, and reasonable ease of implementation
-        - Ensure recommendations span different aspects of HubSpot (data management, automation, analytics, etc.)
-        - Do not mention the actual ICE scores in your response
-        - Recommendations should demonstrate expertise and provide value even if they don't become a client
+    Important guidelines:
+    - Each recommendation should be specific, actionable, and tailored to their situation
+    - Focus recommendations on their stated goals and challenges
+    - Include a mix of quick wins and strategic improvements
+    - For the Impact-Confidence-Ease analysis, prioritize recommendations that would have high impact, high confidence in success, and reasonable ease of implementation
+    - Ensure recommendations span different aspects of HubSpot (data management, automation, analytics, etc.)
+    - Do not mention the actual ICE scores in your response
+    - Recommendations should demonstrate expertise and provide value even if they don't become a client
 
-        Pleasse send response in HTML format, if replay includes any list/bullet point please structure in UL and LI format.
-    `;
+    Remember to use proper HTML formatting throughout the report, especially for lists and bullet points.
+`;
 
 
         try {
@@ -336,18 +343,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 $('.form-error').remove(); // Clear any existing errors
 
                 /*-------------------
-                        // First Name check
-                        if (!firstName) {
-                            $('#first-name').after('<div class="form-error">First name is required.</div>');
-                            hasError = true;
-                        }
+                    // First Name check
+                    if (!firstName) {
+                        $('#first-name').after('<div class="form-error">First name is required.</div>');
+                        hasError = true;
+                    }
         
-                        // Last Name check
-                        if (!lastName) {
-                            $('#last-name').after('<div class="form-error">Last name is required.</div>');
-                            hasError = true;
-                        }
-                    ------------------ */
+                    // Last Name check
+                    if (!lastName) {
+                        $('#last-name').after('<div class="form-error">Last name is required.</div>');
+                        hasError = true;
+                    }
+                ------------------ */
 
                 // URL check (basic pattern)
                 const urlPattern = /^(www\.)?[a-z0-9-]+(\.[a-z]{2,})+$/i;
@@ -400,16 +407,20 @@ document.addEventListener('DOMContentLoaded', function () {
                     $btn.removeClass('disabled').removeAttr('disabled');
                     return;
                 }
-                
-              allowStepProgressUpdate = true;
             }
-            
-            
+
 
             // ✅ If everything passed
             if (targetStep === 'Submit') {
                 $modal.removeClass('d-none');
             } else {
+                if (targetStep === '1') {
+                    handleProgressBarUpdates(1);
+                }
+                if (targetStep === '2') {
+                    handleProgressBarUpdates(2);
+                }
+
                 $steps.addClass('d-none');
                 $(`.hsa-step-${targetStep}`).removeClass('d-none');
             }
@@ -430,6 +441,9 @@ document.addEventListener('DOMContentLoaded', function () {
             $modal.addClass('d-none');    // Hide modal
             lastQuestionStep.addClass('d-none');    // Hide Step 10
             followUpStep.removeClass('d-none'); // Show Step 11
+            handleProgressBarUpdates(3); //Activate Progress 3
+
+
 
             //Scroll top to section
             $('html, body').animate({
@@ -444,35 +458,24 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     //Handle Progress bar
-    function handleProgressBarUpdates() {
-        // Step navigation
-        $('[step-go-to]').on('click', function () {
-            const targetStep = $(this).attr('step-go-to');
+    function handleProgressBarUpdates(targetStep) {
+        // activate progress 2
+        if (targetStep === 2) {
+            $('[hsa-progress-step="2"]').addClass('active');
+        }
 
-            if (targetStep === '2') {
-                $('[hsa-progress-step="2"]').addClass('active');
-            }
+        // Active Progress 1
+        if (targetStep === 1) {
+            $('[hsa-progress-step="2"]').removeClass('active');
+            allowStepProgressUpdate = false; // Reset flag when going back
+        }
 
-            if (targetStep === '1') {
-                $('[hsa-progress-step="2"]').removeClass('active');
-                allowStepProgressUpdate = false; // Reset flag when going back
-
-            }
-        });
-
-        // Modal submit decision
-        $('[hsa-final-submit]').on('click', function () {
-            const action = $(this).attr('hsa-final-submit');
-
-            if (action === 'Yes') {
-                $('[hsa-progress-step="3"]').addClass('active');
-            } else if (action === 'final') {
-                $('[hsa-progress-step="4"]').addClass('active');
-            }
-        });
+        // Active Prgress 3
+        if (targetStep === 3) {
+            $('[hsa-progress-step="3"]').addClass('active');
+        }
     }
 
     handleStepsNavigation();
     handleModalConfirmation();
-    handleProgressBarUpdates();
 });
